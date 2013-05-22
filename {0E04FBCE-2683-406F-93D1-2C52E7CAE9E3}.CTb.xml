@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dbDBserviceJob Ver="1">
+<TfileACdescript.pathNET Val="\\192.168.1.113\D\data.sd"/>
+<TfileACdescript.pathFld Val="E:\Users\СКБ Ореол\Ежедневник\Автономный контроллер\Испытания\110407 1121\data.sd"/>
+<TCrossTableTab>
+  <rcdCrossTableTab DBNumberChanal="1" DBNameChanal= "БКСД1 вес на крюке Датчик" FlNumberChanal="0" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="2" DBNameChanal= "БКСД1 вес гидравлический Аналог" FlNumberChanal="1" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="3" DBNameChanal= "БКСД1 газ на выходе Датчик" FlNumberChanal="2" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="4" DBNameChanal= "БКСД1 газ на площадке Датчик" FlNumberChanal="3" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="5" DBNameChanal= "БКСД1 газ под ротором Датчик" FlNumberChanal="4" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="6" DBNameChanal= "БКСД1 Высота талевого блока Датчик" FlNumberChanal="5" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="7" DBNameChanal= "БКСД1 Вес Аналоговый выход" FlNumberChanal="6" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="8" DBNameChanal= "БКСД2 Момент на ключе №1 Аналог" FlNumberChanal="7" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="9" DBNameChanal= "БКСД2 Момент на ключе №2 Аналог" FlNumberChanal="8" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="10" DBNameChanal= "БКСД2 Крутящий момент СВП Аналог" FlNumberChanal="9" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="11" DBNameChanal= "БКСД2 Обороты СВП Аналог" FlNumberChanal="10" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="12" DBNameChanal= "БКСД2 уровень водяная емкость Датчик" FlNumberChanal="11" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="13" DBNameChanal= "БКСД2 Давление Датчик" FlNumberChanal="12" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="14" DBNameChanal= "БКСД2 Давление Аналоговый выход" FlNumberChanal="13" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="15" DBNameChanal= "БКСД3 момент ротора Аналог" FlNumberChanal="14" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="16" DBNameChanal= "БКСД3 Обороты ротора Аналог" FlNumberChanal="15" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="17" DBNameChanal= "БКСД3 Ходы насоса №1 Аналог" FlNumberChanal="16" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="18" DBNameChanal= "БКСД3 Ходы насоса №2 Аналог" FlNumberChanal="17" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="19" DBNameChanal= "БКСД3 уровень доливная емкость" FlNumberChanal="18" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="20" DBNameChanal= "БКСД3 Поток на выходе Датчик" FlNumberChanal="19" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="21" DBNameChanal= "БКСД3 аналоговые суммарные ХН Аналоговый выход" FlNumberChanal="20" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="22" DBNameChanal= "БКСД4 уровень приемная емкость" FlNumberChanal="21" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="23" DBNameChanal= "БКСД4 плотность приемная емкость" FlNumberChanal="22" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="24" DBNameChanal= "БКСД4 газ приемная емкость" FlNumberChanal="23" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="25" DBNameChanal= "БКСД4 Температура на выходе" FlNumberChanal="24" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="26" DBNameChanal= "БКСД4 уровень емкости блока очистки" FlNumberChanal="25" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="27" DBNameChanal= "БКСД4 Плотность в ёмкости блока очистки" FlNumberChanal="26" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="28" DBNameChanal= "БКСД4 Канал7 резерв" FlNumberChanal="27" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="29" DBNameChanal= "БКСД5 уровень емкости приготовления отсек2" FlNumberChanal="28" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="30" DBNameChanal= "БКСД5 плотность емкости приготовления отсек2" FlNumberChanal="29" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="31" DBNameChanal= "БКСД5 газ вибросит" FlNumberChanal="30" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="32" DBNameChanal= "БКСД5 Температура на входе" FlNumberChanal="31" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="33" DBNameChanal= "БКСД5 уровень емкости приготовления отсек1" FlNumberChanal="32" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="34" DBNameChanal= "БКСД5 Расход на входе" FlNumberChanal="33" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="35" DBNameChanal= "БКСД5 Уровень емкости промежуточной" FlNumberChanal="34" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="36" DBNameChanal= "БКСД6 Канал1 резерв" FlNumberChanal="35" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="37" DBNameChanal= "БКСД6 Канал2 резерв" FlNumberChanal="36" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="38" DBNameChanal= "БКСД6 Канал3 резерв" FlNumberChanal="37" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="39" DBNameChanal= "БКСД6 Канал4 резерв" FlNumberChanal="38" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="40" DBNameChanal= "БКСД6 Канал5 резерв" FlNumberChanal="39" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="41" DBNameChanal= "БКСД6 Канал6 резерв" FlNumberChanal="40" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="42" DBNameChanal= "БКСД6 Канал7 резерв" FlNumberChanal="41" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="43" DBNameChanal= "БКСД2 Объём водяная емкость" FlNumberChanal="42" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="44" DBNameChanal= "БКСД3 Объём доливная емкость" FlNumberChanal="43" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="45" DBNameChanal= "БКСД4 Объём приемная емкость" FlNumberChanal="44" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="46" DBNameChanal= "БКСД4 Объём емкости блока очистки" FlNumberChanal="45" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="47" DBNameChanal= "БКСД5 Объём емкости приготовления отсек2" FlNumberChanal="46" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="48" DBNameChanal= "БКСД5 Объём емкости приготовления отсек1" FlNumberChanal="47" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="49" DBNameChanal= "БКСД5 Объём емкости промежуточной" FlNumberChanal="48" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="50" DBNameChanal= "Газы 20% НКПР" FlNumberChanal="49" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="51" DBNameChanal= "Газы 50% НКПР" FlNumberChanal="50" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="52" DBNameChanal= "Из АСУ. Скорость двигателя насоса 1" FlNumberChanal="51" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="53" DBNameChanal= "Из АСУ. Скорость двигателя насоса 2" FlNumberChanal="52" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="54" DBNameChanal= "Из АСУ. Обороты ротора" FlNumberChanal="53" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="55" DBNameChanal= "Из АСУ. Крутящий момент ротора" FlNumberChanal="54" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="56" DBNameChanal= "Из АСУ. Клинья" FlNumberChanal="55" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="57" DBNameChanal= "Из АСУ. Диаметр поршня насоса №1" FlNumberChanal="56" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="58" DBNameChanal= "Из АСУ. Диаметр поршня насоса №2" FlNumberChanal="57" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="59" DBNameChanal= "Из АСУ. Усилие в гидрораскрепителе" FlNumberChanal="58" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="60" DBNameChanal= "Из АСУ. Команда оператора" FlNumberChanal="59" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="61" DBNameChanal= "В АСУ. Вес на крюке" FlNumberChanal="60" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="62" DBNameChanal= "В АСУ. Нагрузка на инструмент" FlNumberChanal="61" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="63" DBNameChanal= "В АСУ. Крутящий момент ротора" FlNumberChanal="62" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="64" DBNameChanal= "В АСУ. Обороты ротора" FlNumberChanal="63" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="65" DBNameChanal= "В АСУ. Скорость тальблока" FlNumberChanal="64" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="66" DBNameChanal= "В АСУ. Расход на входе" FlNumberChanal="65" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="67" DBNameChanal= "В АСУ. Суммарный объём" FlNumberChanal="66" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="68" DBNameChanal= "В АСУ. Ходы насоса 1" FlNumberChanal="67" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="69" DBNameChanal= "В АСУ. Ходы насоса 2" FlNumberChanal="68" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="70" DBNameChanal= "В АСУ. Сумма ходов насоса" FlNumberChanal="69" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="71" DBNameChanal= "В АСУ. Подача" FlNumberChanal="-1" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="72" DBNameChanal= "В АСУ. Скорость механическая" FlNumberChanal="-1" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="73" DBNameChanal= "В АСУ. Глубина забоя" FlNumberChanal="-1" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="74" DBNameChanal= "В АСУ. Время бурения 1м" FlNumberChanal="-1" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="75" DBNameChanal= "В АСУ. Номер свечи" FlNumberChanal="-1" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="76" DBNameChanal= "В АСУ. Изменение потока на выходе" FlNumberChanal="-1" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="77" DBNameChanal= "В АСУ. Изменение суммарного объема" FlNumberChanal="-1" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="78" DBNameChanal= "Состояние процесса бурения" FlNumberChanal="-1" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="79" DBNameChanal= "Скорость СПО" FlNumberChanal="-1" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="80" DBNameChanal= "Расход на входе по ходам насоса Аналоговый" FlNumberChanal="-1" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="81" DBNameChanal= "Расход на входе по ходам насоса АСУ" FlNumberChanal="-1" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="82" DBNameChanal= "Расход на входе по ходам насоса" FlNumberChanal="-1" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="83" DBNameChanal= "Вес колонны" FlNumberChanal="-1" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="84" DBNameChanal= "В АСУ. Длина инструмента" FlNumberChanal="-1" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="85" DBNameChanal= "Глубина инструмента" FlNumberChanal="-1" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="86" DBNameChanal= "Над забоем" FlNumberChanal="-1" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="87" DBNameChanal= "Время циркуляции" FlNumberChanal="-1" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="88" DBNameChanal= "Время бурения" FlNumberChanal="-1" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="89" DBNameChanal= "Команда из ПУ (настройка)" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="90" DBNameChanal= "Тестовый канал" FlNumberChanal="-1" bSaveDB="True" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="91" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="92" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="93" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="94" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="95" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="96" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="97" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="98" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="99" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="100" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="101" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="102" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="103" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="104" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="105" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="106" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="107" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="108" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="109" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="110" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="111" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="112" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="113" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="114" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="115" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="116" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="117" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="118" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="119" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="120" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="121" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="122" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="123" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="124" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="125" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="126" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="127" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="128" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="129" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="130" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="131" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="132" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="133" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="134" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="135" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="136" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="137" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="138" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="139" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="140" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="141" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="142" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="143" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="144" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="145" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="146" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="147" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="148" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="149" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="150" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="151" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="152" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="153" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="154" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="155" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="156" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="157" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="158" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="159" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="160" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="161" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="162" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="163" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="164" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="165" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="166" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="167" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="168" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="169" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="170" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="171" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="172" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="173" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="174" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="175" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="176" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="177" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="178" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="179" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="180" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="181" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="182" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="183" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="184" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="185" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="186" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="187" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="188" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="189" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="190" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="191" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="192" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="193" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="194" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="195" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="196" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="197" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="198" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="199" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="200" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="201" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="202" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="203" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="204" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="205" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="206" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="207" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="208" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="209" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="210" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="211" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="212" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="213" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="214" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="215" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="216" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="217" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="218" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="219" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="220" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="221" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="222" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="223" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="224" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="225" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="226" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="227" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="228" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="229" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="230" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="231" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="232" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="233" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="234" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="235" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="236" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="237" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="238" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="239" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="240" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="241" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="242" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="243" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="244" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="245" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="246" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="247" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="248" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="249" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="250" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="251" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="252" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="253" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="254" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="255" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+  <rcdCrossTableTab DBNumberChanal="256" DBNameChanal= "Параметр не определен" FlNumberChanal="-1" bSaveDB="False" bActive="False"/>
+</TCrossTableTab>
+</dbDBserviceJob>

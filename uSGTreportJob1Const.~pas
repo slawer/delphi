@@ -1,0 +1,56 @@
+unit uSGTreportJob1Const;
+
+interface
+
+const
+//  pc005_502_ConfigRPTxlsName = 'yyyy.mm.dd hh.nn.ss.zzz'; // Имя файла с рапортом
+  pc005_502_ConfigRPTxlsName = 'yyyy.mm.dd hh.nn.ss'; // Имя файла с рапортом
+  pc005_502_ConfigRPTxlsType = '.xls'; //
+  pc005_502_ConfigRPTxlsPrfx = 'rpt.'; //
+
+
+// Описание шаблона
+  pc005_502_Shab_Col1             = 14; // Дата отчета
+  pc005_502_Shab_Row1             =  2;
+  pc005_502_Shab_Col2             =  4; // Глубина(нач. сут.)
+  pc005_502_Shab_Row2             =  6;
+  pc005_502_Shab_Col3             =  4; // Глубина(кон. сут.)
+  pc005_502_Shab_Row3             =  7;
+  pc005_502_Shab_Col4             =  4; //  Проходка
+  pc005_502_Shab_Row4             =  8;
+  pc005_502_Shab_Col5             = 14; // Дата Начала бурения
+  pc005_502_Shab_Row5             =  4;
+  pc005_502_Shab_Col6             =  4; // Скважина
+  pc005_502_Shab_Row6             =  2;
+  pc005_502_Shab_Col7             =  9; // Куст
+  pc005_502_Shab_Row7             =  2;
+  pc005_502_Shab_Col8             =  4; // Заказчик
+  pc005_502_Shab_Row8             =  3;
+  pc005_502_Shab_Col9             =  4; // Подрядчик
+  pc005_502_Shab_Row9             =  4;
+  pc005_502_Shab_Col10            =  4; // Мастер
+  pc005_502_Shab_Row10            =  5;
+
+
+
+  pc005_502_Shab_SostProcRowCnt   = 27;
+  pc005_502_Shab_SostProcRow      = 13;
+  pc005_502_Shab_SostProcCol1     =  2;
+  pc005_502_Shab_SostProcCol1a    =  3;
+  pc005_502_Shab_SostProcCol1b    =  5;
+  pc005_502_Shab_SostProcCol2     =  9;
+  pc005_502_Shab_SostProcCol2a    = 10;
+  pc005_502_Shab_SostProcCol2b    = 12;
+
+  pc005_502_Shab_SvodkaRow        = 70;
+  pc005_502_Shab_SvodkaColspo     =  2;
+  pc005_502_Shab_SvodkaColprom    =  3;
+  pc005_502_Shab_SvodkaColpror    =  4;
+  pc005_502_Shab_SvodkaColbur     =  5;
+  pc005_502_Shab_SvodkaColnar     =  6;
+  pc005_502_Shab_SvodkaColpzr     =  9;
+
+
+implementation
+
+end.

@@ -1,0 +1,13 @@
+unit uSetUstavkiTuneConst;
+
+interface
+
+const
+  pc003_123_jMain       = 123;
+  pc003_123_Caption     = 'Настройка адресов БКСД';
+
+//  pc003_123_02    = 'Извините, поле "%s" должно быть целым числом';
+
+implementation
+
+end.

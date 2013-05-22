@@ -1,0 +1,1295 @@
+unit uDEPdescript2;
+
+interface
+uses
+  Windows, SysUtils, uAbstrArray, uMainData, Math, Graphics,
+  uSGTlibDB1, xmldom, XMLIntf, msxmldom, XMLDoc, Classes, Variants,
+  uDEPdescript2const, uDEPGrafList1, uSGTlibDB1const,
+  uGraphPatterns1, uOreolProtocol6;
+
+type
+
+// Класс, описывающий графические настройки листа в целом
+  TDEPpageDescr = class
+    Height:       Integer; // Логическая высота листа (в ед по 0.1 мм)
+    Width:        Integer; // Логическая ширина листа (в ед по 0.1 мм)
+    shiftTop:     Integer; // Логический отступ на листе сверху (в ед по 0.1 мм)
+    shiftLeft:    Integer; // Логический отступ на листе слева  (в ед по 0.1 мм)
+    shiftRight:   Integer; // Логический отступ на листе справа (в ед по 0.1 мм)
+    shiftBottom:  Integer; // Логический отступ на листе снизу  (в ед по 0.1 мм)
+    ramColor:     Tcolor;  // Цвет="clGreen"
+    ramWidth:     Integer; // Логическая ширина рамки (в ед по 0.1 мм)
+    sizeZGL:      Integer; // Размер_шрифта_заголовка="12"
+    sizeTOUT:     Integer; // тайм_аут="5000" в милисекундах
+    procedure   Clone(Source: TDEPpageDescr);
+    constructor Create;
+  end;
+
+// Класс, описывающий область отрисовки графиков
+  TDEPgraphDescr = class
+    netColor:  TColor; // Цвет_сетки="%s"            clrValueToStr(pGW.netColor),
+    netWidth: Integer; // Толщина_сетки="%s"  sWR, := jValueToDStr(pGW.netWidth);
+    netYStep: Integer; // Шаг_по_времени="%s"         jValueToDStr(pGW.netYStep),
+    cntXStep: Integer; // Делитель_сетки_по_Y="%d"                  pGW.cntXStep,
+    ramColor:  TColor; // Цвет рамки Цвет_рамки="%s" clrValueToStr(pGW.ramColor)
+    ramWidth: Integer; // Толщина_рамки="%s"   sWE := jValueToDStr(pGW.ramWidth)
+    TSclSize: Integer; // Высота шрифта шкалы времени   pGW.TSclSize
+    fnSize:   Integer;    // Высота шрифта шкалы времени  pGW.fnSize
+    bSignScaleVal: boolean; // Подписать риски на шкале графиков
+    procedure   Clone(Source: TDEPgraphDescr);
+    constructor Create;
+  end;
+
+// Класс, описывающий графические настройки канала
+  rcdDEPlistChanGraphDescr = rcdTrackPattern;
+  PrcdDEPlistChanGraphDescr = PrcdTrackPattern;
+  TDEPlistChanGraphDescr = TTrackPattern;
+{
+  rcdDEPlistChanGraphDescr =  packed record
+    nChanal:  Integer;    // Номер канала
+    sName:    String[63]; // Имя параметра   - для внутреннего использавния и обратной совместимости!
+    sPodp:    String[7];  // Подпись="Плот"
+    sEdIzm:   String[7];  // Единица="г/см3"
+    diaMin:   Double;     // Минимум="0.6"
+    diaMax:   Double;     // Максимум="2.6"
+    Color:    Tcolor;     // Цвет="clGreen"
+    xLogSize: Integer;    // Толщина линии (0.1 мм,  "0.8" * 10)
+    xLogStep: Integer;    // Шаг_отрисовки (0.1 мм,  "0.5" * 10)
+    fnSize:   Integer;    // Размер_надписи="10"
+    Precision:Integer;    // Число знаков после запятой в представлении числа
+    Digits:   Integer;    // Ширина поля в представлении числа
+//    sFormat:  String[15]; // Формат="4.2f" - для внутреннего использавния и обратной совместимости!
+  end;
+  PrcdDEPlistChanGraphDescr = ^rcdDEPlistChanGraphDescr;
+
+  TDEPlistChanGraphDescr = class(prqTabstract1)
+  private
+    function    GetPntDyn(j: Integer): PrcdDEPlistChanGraphDescr;
+  protected
+    function  Check(ukz1, ukz2: Pointer; mode: Integer): Integer; override;
+  public
+    property    pntDyn[j:Integer]: PrcdDEPlistChanGraphDescr read GetPntDyn; default;
+    procedure   Clone(Source: TDEPlistChanGraphDescr);
+    constructor Create;
+    destructor  Destroy; override;
+  end;
+}
+
+// Класс, описывающий список каналов в листе
+  rcdDEPlistGraphS =  packed record
+    chanal:      Integer; // Номер графика на экране сверху вниз
+    visible:     Boolean;
+    graph:       rcdDEPlistChanGraphDescr; // Описание графика;
+  end;
+  PrcdDEPlistGraphS = ^rcdDEPlistGraphS;
+
+  TDEPlistGraphS = class(prqTabstract1)
+  private
+    function    GetPntDyn(j: Integer): PrcdDEPlistGraphS;
+  protected
+    function  Check(ukz1, ukz2: Pointer; mode: Integer): Integer; override;
+  public
+    property    pntDyn[j:Integer]: PrcdDEPlistGraphS read GetPntDyn; default;
+    procedure   Clone(Source: TDEPlistGraphS);
+    constructor Create;
+    destructor  Destroy; override;
+  end;
+
+// Класс, описывающий лист "в целом"
+  TDEPgraphDescribe = class
+  private
+    Flistnumber: integer;
+    procedure Setlistnumber(const Value: integer);
+  public
+//    Chanals:  TDEPlistGraphS;          // Список каналов, указанных в запросе
+    Graphiks: TDEPGraphDescr;          // Зона графика
+    Pages:    TDEPPageDescr;           // Лист, потенциально - контейнер листов, Геометрия листа в целом
+
+// Определяем класс, содержащий список шаблонов, используемых для задания на поиск
+    GraphListPatterns: TGraphListPatterns;
+
+    listGrfS: TDEPlistChanGraphDescr;  // Описания каналов
+
+    property listnumber: integer read Flistnumber write Setlistnumber;
+
+
+
+class function jValueToDStr(jV: Integer): String;
+class function clrValueToStr(jV: TColor): String;
+
+    procedure   Clone(Source: TDEPgraphDescribe);
+    constructor Create;
+    destructor  Destroy; override;
+  end;
+
+
+// Класс, описывающий интервалы времен и процесс
+  rcdDEPstepProc =  packed record
+    dBeg, dEnd: TDateTime;
+    Etap:      Integer;
+//    Rezhim:    Integer;
+  end;
+  PrcdDEPstepProc = ^rcdDEPstepProc;
+
+  TDEPstepProc = class(prqTabstract1)
+  private
+    function    GetPntDyn(j: Integer): PrcdDEPstepProc;
+  protected
+    function  Check(ukz1, ukz2: Pointer; mode: Integer): Integer; override;
+  public
+    property    pntDyn[j:Integer]: PrcdDEPstepProc read GetPntDyn; default;
+    procedure   Clone(Source: TDEPstepProc);
+    constructor Create;
+    destructor  Destroy; override;
+  end;
+
+
+// Класс, описывающий соотношение содержательных понятий рапорта СГТ:
+// "Механическая скорость", "ДМК", "Режим бурения" и конкретного параметра,
+// сохранённого в БД
+  rcdDEPsgtParam =  packed record
+    SGTparNum:      Integer;    // Уникальный номер, определяющий смысл и свойства параметра
+    DEPparNum:      Integer;    // Номер параметра в БД, соответсвующий понятию рапорта СГТ
+    SGTparNameBig:  String[63]; // Имя понятия рапорта СГТ (для юзера как правило Read Only)
+    SGTparNameShrt: String[7];  // Короткое Имя понятия рапорта СГТ (для юзера как правило Read Only)
+  end;
+  PrcdDEPsgtParam = ^rcdDEPsgtParam;
+
+  TDEPsgtParam = class(prqTabstract1)
+  private
+    FModify: boolean;
+    function    GetPntDyn(j: Integer): PrcdDEPsgtParam;
+    procedure SetModify(const Value: boolean);
+  protected
+    function  Check(ukz1, ukz2: Pointer; mode: Integer): Integer; override;
+  public
+    property    pntDyn[j:Integer]: PrcdDEPsgtParam read GetPntDyn; default;
+    property    Modify: boolean read FModify write SetModify;
+    procedure   Clone(Source: TDEPsgtParam);
+    constructor Create;
+    destructor  Destroy; override;
+  end;
+
+
+// Класс, описывающий параметры DEP БД:
+  rcdDEPdepParam =  packed record
+    DEPparNum:      Integer;    // Номер параметра в БД
+    SGTparNameBig:  String[63]; // Имя параметра в БД (для юзера как правило Read Only)
+    SGTparNameShrt: String[7];  // Короткое Имя параметра в БД (для юзера как правило Read Only)
+    SGTparNameType: String[7];  // Единица измерения
+    bSaveDB:        Boolean;    // флаг хранения параметра в БД
+  end;
+  PrcdDEPdepParam = ^rcdDEPdepParam;
+
+  TDEPdepParam = class(prqTabstract1)
+  private
+    function    GetPntDyn(j: Integer): PrcdDEPdepParam;
+  protected
+    function  Check(ukz1, ukz2: Pointer; mode: Integer): Integer; override;
+  public
+    property    pntDyn[j:Integer]: PrcdDEPdepParam read GetPntDyn; default;
+    procedure   Clone(Source: TDEPdepParam);
+    class procedure clearRecord(var rcd: rcdDEPdepParam);
+    constructor Create;
+    destructor  Destroy; override;
+  end;
+
+
+// Класс, описывающий рапорт и его настройки
+  TDEPrptALL = class
+    private
+      FModify: boolean;
+      procedure SetModify(const Value: boolean);
+    public
+      dBeg, dEnd: TDateTime; // Начало и конец суток в запросе
+      dStart: TDateTime; // Начало бурения
+
+      Zakaz:  string; // Строка - Заказчик
+      Podrjad:  string; // Строка - Подрядчик
+      Station:  string; // Строка - имя станции
+      Mestorogd, Kust, Rabota, Skvagina, MainPersons: String;
+
+      NullValue:  string; // Строка - представление значения "Нет данных"
+      NotValid:   string; // Строка - представление значения "Значение не пишется в БД"
+      Delimeter:  string; // Разделитель полей во временном файле
+      Precision: Integer; // Число знаков после запятой в представлении числа
+      Digits:    Integer; // Ширина поля в представлении числа
+      DataType:  Integer; // Тип данных:
+                                    // 0 - данные с шагом записи 1сек.
+                                    // 1 - данные с шагом записи установленным пользователем
+                                    // 2 - данные по глубине
+
+      DataPath:  string;  // Путь к данным, используется в запросе к данным
+      RefrPath:  string;  // Путь к описателям, используется в запросе описаний параметров
+      DocPath:   string;  // Путь к описателям, используется в запросе описаний параметров
+
+      listReport: prqTinteger;
+      valReport:  prqTabsField;
+
+      property    Modify: boolean read FModify write SetModify;
+
+      procedure   Clone(Source: TDEPrptALL);
+      constructor Create;
+      destructor Destroy; override;
+    end;
+
+
+  TDEPrptSGT = class
+    private
+    public
+      dptBeg, dptEnd: Double; // Глубина в начале - конце суток
+      dTspo:  TDateTime; // Время спуска подъёма
+      dTprom: TDateTime; // Время промывки
+      dTpror: TDateTime; // Время проработки
+      dTbur:  TDateTime; // Время бурения
+      dTnar:  TDateTime; // Время наращивания
+      dTpzr:  TDateTime; // Время подготовительно заключительных работ
+
+      listSost:   TDEPstepProc;
+
+      procedure   Clone(Source: TDEPrptSGT);
+      constructor Create;
+      destructor Destroy; override;
+    end;
+
+
+  DEPreportJobAll = class(SGTlibDB1)
+  private
+
+  public
+    XMLDocument1: TXMLDocument;
+
+    dirStart: string;               // Папка с программой
+    dirCrnt:  string;               // Рабочая папка программы
+
+    cnfSgtParamName:      string;   // Имя файла с конфигурацией таблицы sgt param
+    lastDoc:              string;   // Имя файла с последним сохранённым документом
+
+    DEPsgtParam:  TDEPsgtParam;
+    DEPdepParam:  TDEPdepParam;
+    DEPqueParam:  TDEPrptALL;
+
+    function  loadGrafik(numPar: Integer; grf: TprqRptTX): Integer; // Загрузка графика в график :-)
+
+    function  getNameEtapProc(index_tehEtapa: Integer): string;
+    function  isSostTall (index_tehEtapa: Integer): boolean;
+    function  isSostTspo (index_tehEtapa: Integer): boolean;
+    function  isSostTprom(index_tehEtapa: Integer): boolean;
+    function  isSostTpror(index_tehEtapa: Integer): boolean;
+    function  isSostTbur (index_tehEtapa: Integer): boolean;
+    function  isSostTnar (index_tehEtapa: Integer): boolean;
+    function  isSostTpzr (index_tehEtapa: Integer): boolean;
+
+    procedure addInterval(var tVal: TDateTime; pRcd: PrcdDEPstepProc);
+
+    procedure IniDEPsgtParam;
+
+    function  dbdParamLoad: Integer; overload;
+
+    function  sgtParamLoad: Integer;
+    function  sgtParamTranslator(XmlNode: IXMLNode): Integer;
+    function  sgtParamTranslatVer1(XmlNode: IXMLNode): Integer;
+    function  sgtParamTranslatVer1_1(XmlNode: IXMLNode): Integer; // '<Параметры_СГТ>';
+    function  sgtParamTranslatVer1_2(XmlNode: IXMLNode): Integer; // '<Значения_По_Умолчанию>';
+
+    function  AddDEPsgtParam(jCode: Integer): Integer;
+
+    function  sgtParamSave: Integer;
+
+    function  FindSGTparam(numbe_prm: Integer): Integer;
+
+    procedure   Clone(Source: DEPreportJobAll);
+    constructor Create;
+    destructor  Destroy; override;
+  end;
+
+implementation
+uses
+  uSupport;
+
+{ TDEPsgtParam }
+
+function TDEPsgtParam.Check(ukz1, ukz2: Pointer; mode: Integer): Integer;
+begin
+  case mode of
+  1: begin
+       result := sign( PrcdDEPsgtParam(ukz1).SGTparNum - PrcdDEPsgtParam(ukz2).SGTparNum );
+     end;
+  2: begin
+       result := sign( PrcdDEPsgtParam(ukz1).DEPparNum - PrcdDEPsgtParam(ukz2).DEPparNum );
+     end;
+  else
+    result := 0;
+  end;
+  Inc(result, 2);
+end;
+
+procedure TDEPsgtParam.Clone(Source: TDEPsgtParam);
+begin
+  if not Assigned(Source) then Exit;
+  FModify := Source.FModify;
+  inherited Clone(Source);
+end;
+
+constructor TDEPsgtParam.Create;
+begin
+  inherited;
+  FrcdSize := SizeOf(rcdDEPsgtParam);
+  FModify  := false;
+end;
+
+destructor TDEPsgtParam.Destroy;
+begin
+  inherited;
+end;
+
+function TDEPsgtParam.GetPntDyn(j: Integer): PrcdDEPsgtParam;
+begin
+  result := GetPnt(j);
+end;
+
+procedure TDEPsgtParam.SetModify(const Value: boolean);
+begin
+  FModify := Value;
+end;
+
+{ TDEPdepParam }
+
+function TDEPdepParam.Check(ukz1, ukz2: Pointer; mode: Integer): Integer;
+begin
+  case mode of
+  1: begin
+       result := sign( PrcdDEPdepParam(ukz1).DEPparNum - PrcdDEPdepParam(ukz2).DEPparNum );
+     end;
+  else
+    result := 0;
+  end;
+  Inc(result, 2);
+end;
+
+class procedure TDEPdepParam.clearRecord(var rcd: rcdDEPdepParam);
+begin
+  rcd.DEPparNum := -1;
+  rcd.SGTparNameBig := '';
+  rcd.SGTparNameShrt := '';
+  rcd.SGTparNameType := '';
+  rcd.bSaveDB := false;
+end;
+
+procedure TDEPdepParam.Clone(Source: TDEPdepParam);
+begin
+  inherited Clone(Source);
+end;
+
+constructor TDEPdepParam.Create;
+begin
+  inherited;
+  FrcdSize := SizeOf(rcdDEPdepParam);
+end;
+
+destructor TDEPdepParam.Destroy;
+begin
+  inherited;
+end;
+
+function TDEPdepParam.GetPntDyn(j: Integer): PrcdDEPdepParam;
+begin
+  result := GetPnt(j);
+end;
+
+{ TDEPrptSGT }
+
+procedure TDEPrptSGT.Clone(Source: TDEPrptSGT);
+begin
+  if not Assigned(Source) then Exit;
+
+  dptBeg  := Source.dptBeg;
+  dptEnd  := Source.dptEnd;
+  dTspo   := Source.dTspo;
+  dTprom  := Source.dTprom;
+  dTpror  := Source.dTpror;
+  dTbur   := Source.dTbur;
+  dTnar   := Source.dTnar;
+  dTpzr   := Source.dTpzr;
+  listSost.Clone(Source.listSost);
+end;
+
+constructor TDEPrptSGT.Create;
+begin
+  inherited;
+  listSost     := TDEPstepProc.Create;
+end;
+
+destructor TDEPrptSGT.Destroy;
+begin
+  listSost.Free;
+  inherited;
+end;
+
+{ TDEPstepProc }
+
+function TDEPstepProc.Check(ukz1, ukz2: Pointer; mode: Integer): Integer;
+begin
+  case mode of
+  1: begin
+       result := sign( PrcdDEPstepProc(ukz1).dBeg - PrcdDEPstepProc(ukz2).dBeg );
+     end;
+  2: begin
+       result := sign( PrcdDEPstepProc(ukz1).dEnd - PrcdDEPstepProc(ukz2).dEnd );
+     end;
+  3: begin
+       result := sign( PrcdDEPstepProc(ukz1).Etap - PrcdDEPstepProc(ukz2).Etap );
+     end;
+{
+  4: begin
+       result := sign( PrcdDEPstepProc(ukz1).Rezhim - PrcdDEPstepProc(ukz2).Rezhim );
+     end;
+}
+  else
+    result := 0;
+  end;
+  Inc(result, 2);
+end;
+
+procedure TDEPstepProc.Clone(Source: TDEPstepProc);
+begin
+  inherited Clone(Source);
+end;
+
+constructor TDEPstepProc.Create;
+begin
+  inherited;
+  FrcdSize := SizeOf(rcdDEPstepProc);
+end;
+
+destructor TDEPstepProc.Destroy;
+begin
+  inherited;
+end;
+
+function TDEPstepProc.GetPntDyn(j: Integer): PrcdDEPstepProc;
+begin
+  result := GetPnt(j);
+end;
+
+{ TDEPlistGraphS }
+
+function TDEPlistGraphS.Check(ukz1, ukz2: Pointer; mode: Integer): Integer;
+begin
+  case mode of
+  1: begin
+       result := sign( PrcdDEPlistGraphS(ukz1).chanal - PrcdDEPlistGraphS(ukz2).chanal );
+     end;
+  else
+    result := 0;
+  end;
+  Inc(result, 2);
+end;
+
+procedure TDEPlistGraphS.Clone(Source: TDEPlistGraphS);
+begin
+  inherited Clone(Source);
+end;
+
+constructor TDEPlistGraphS.Create;
+begin
+  inherited;
+  FrcdSize := SizeOf(rcdDEPlistGraphS);
+end;
+
+destructor TDEPlistGraphS.Destroy;
+begin
+  inherited;
+end;
+
+function TDEPlistGraphS.GetPntDyn(j: Integer): PrcdDEPlistGraphS;
+begin
+  result := GetPnt(j);
+end;
+
+{ TDEPlistChanGraphDescr 
+
+function TDEPlistChanGraphDescr.Check(ukz1, ukz2: Pointer; mode: Integer): Integer;
+begin
+  case mode of
+  1: begin
+       result := sign( PrcdDEPlistChanGraphDescr(ukz1).nChanal - PrcdDEPlistChanGraphDescr(ukz2).nChanal );
+     end;
+  else
+    result := 0;
+  end;
+  Inc(result, 2);
+end;
+
+procedure TDEPlistChanGraphDescr.Clone(Source: TDEPlistChanGraphDescr);
+begin
+  Clone(Source);
+end;
+
+constructor TDEPlistChanGraphDescr.Create;
+begin
+  inherited;
+  FrcdSize := SizeOf(rcdDEPlistChanGraphDescr);
+end;
+
+destructor TDEPlistChanGraphDescr.Destroy;
+begin
+  inherited;
+end;
+
+function TDEPlistChanGraphDescr.GetPntDyn(j: Integer): PrcdDEPlistChanGraphDescr;
+begin
+  result := GetPnt(j);
+end;
+}
+
+{ TDEPPageDescr }
+
+procedure TDEPpageDescr.Clone(Source: TDEPpageDescr);
+begin
+  if not Assigned(Source) then Exit;
+
+  Height      := Source.Height;
+  Width       := Source.Width;
+  shiftTop    := Source.shiftTop;
+  shiftLeft   := Source.shiftLeft;
+  shiftRight  := Source.shiftRight;
+  shiftBottom := Source.shiftBottom;
+  ramColor    := Source.ramColor;
+  ramWidth    := Source.ramWidth;
+  sizeZGL     := Source.sizeZGL;
+  sizeTOUT    := Source.sizeTOUT;
+end;
+
+constructor TDEPPageDescr.Create;
+begin
+  Height      :=   2970;
+  Width       :=   2100;
+  shiftTop    :=     50;
+  shiftLeft   :=    150;
+  shiftRight  :=     50;
+  shiftBottom :=    100;
+  ramColor    := clBlue;
+  ramWidth    :=      3;
+  sizeZGL     :=     12;
+  sizeTOUT    :=   5000;
+end;
+
+{ TDEPGraphDescribe }
+
+procedure TDEPgraphDescribe.Clone(Source: TDEPgraphDescribe);
+begin
+  if not Assigned(Source) then Exit;
+
+//  Chanals.Clone(Source.Chanals);
+  Graphiks.Clone(Source.Graphiks);
+  Pages.Clone(Source.Pages);
+  listGrfS.Clone(Source.listGrfS);
+
+  GraphListPatterns.Clone(Source.GraphListPatterns);
+  Flistnumber := Source.Flistnumber;
+end;
+
+class function TDEPGraphDescribe.clrValueToStr(jV: TColor): String;
+begin
+  result := IntToStr(jV);
+end;
+
+constructor TDEPGraphDescribe.Create;
+begin
+//   Chanals := TDEPlistGraphS.Create;
+  Graphiks := TDEPGraphDescr.Create;
+     Pages := TDEPPageDescr.Create;
+  listGrfS := TDEPlistChanGraphDescr.Create;
+
+  GraphListPatterns := TGraphListPatterns.Create;
+  Flistnumber := 0;
+end;
+
+destructor TDEPGraphDescribe.Destroy;
+begin
+//  Chanals.Free;
+  Graphiks.Free;
+  Pages.Free;
+  listGrfS.Free;
+
+  GraphListPatterns.Free;
+
+  inherited;
+end;
+
+class function TDEPGraphDescribe.jValueToDStr(jV: Integer): String;
+var
+  d1: Double;
+begin
+  d1 := jV;
+  result := Trim(   Format('%8.1f', [d1 / 10])   );
+end;
+
+procedure TDEPgraphDescribe.Setlistnumber(const Value: integer);
+begin
+  Flistnumber := Value;
+end;
+
+{ TDEPGraphDescr }
+
+procedure TDEPgraphDescr.Clone(Source: TDEPgraphDescr);
+begin
+  if not Assigned(Source) then Exit;
+  netColor := Source.netColor;
+  netWidth := Source.netWidth;
+  netYStep := Source.netYStep;
+  cntXStep := Source.cntXStep;
+  ramColor := Source.ramColor;
+  ramWidth := Source.ramWidth;
+  TSclSize := Source.TSclSize;
+  fnSize   := Source.fnSize;
+  bSignScaleVal := Source.bSignScaleVal;
+end;
+
+constructor TDEPGraphDescr.Create;
+begin
+  netColor :=  clBlue;
+  netWidth :=       3;
+  netYStep :=     100;
+  cntXStep :=      10;
+  ramColor := clGreen;
+  ramWidth :=       5;
+  TSclSize :=       8;
+  fnSize   :=       8;
+  bSignScaleVal := false;
+end;
+
+{ DEPreportJobAll }
+
+function DEPreportJobAll.AddDEPsgtParam(jCode: Integer): Integer;
+var
+  rcd: rcdDEPsgtParam;
+begin
+  rcd.SGTparNum := jCode;
+  result := self.DEPsgtParam.Find(@rcd, 1);
+  if result = 0 then
+  begin
+    rcd.DEPparNum      := -1;
+    rcd.SGTparNameBig  := '';
+    rcd.SGTparNameShrt := '';
+    self.DEPsgtParam.Append(@rcd);
+    result := self.DEPsgtParam.Count;
+  end;
+end;
+
+procedure DEPreportJobAll.addInterval(var tVal: TDateTime;
+  pRcd: PrcdDEPstepProc);
+begin
+  tVal := tVal + pRcd.dEnd - pRcd.dBeg;
+end;
+
+procedure DEPreportJobAll.Clone(Source: DEPreportJobAll);
+begin
+  if not Assigned(Source) then Exit;
+
+  XMLDocument1    := Source.XMLDocument1;
+  
+  dirStart        := Source.dirStart;
+  dirCrnt         := Source.dirCrnt;
+  cnfSgtParamName := Source.cnfSgtParamName;
+  lastDoc         := Source.lastDoc;
+
+  inherited Clone(Source);
+
+  DEPsgtParam.Clone(Source.DEPsgtParam);
+  DEPdepParam.Clone(Source.DEPdepParam);
+  DEPqueParam.Clone(Source.DEPqueParam);
+end;
+
+constructor DEPreportJobAll.Create;
+begin
+  inherited;
+  XMLDocument1 := nil;
+  DEPsgtParam  := TDEPsgtParam.Create;
+  DEPdepParam  := TDEPdepParam.Create;
+  DEPqueParam  := TDEPrptALL.Create;
+  dirStart     := '';
+  dirCrnt      := '';
+  lastDoc      := '';
+  cnfSgtParamName := '';
+  IniDEPsgtParam;
+end;
+
+destructor DEPreportJobAll.Destroy;
+begin
+  XMLDocument1 := nil;
+  DEPsgtParam.Free;
+  DEPdepParam.Free;
+  DEPqueParam.Free;
+
+  inherited;
+end;
+
+function DEPreportJobAll.FindSGTparam(numbe_prm: Integer): Integer;
+var
+  rcdDEP: rcdDEPdepParam;
+  rcdSGT: rcdDEPsgtParam;
+  jN: Integer;
+begin
+  result := -1;
+  rcdSGT.SGTparNum := numbe_prm;
+  jN := self.DEPsgtParam.Find(@rcdSGT, 1);
+  if jN < 1 then Exit;
+
+  rcdDEP.DEPparNum := self.DEPsgtParam[jN].DEPparNum;
+  jN := self.DEPdepParam.Find(@rcdDEP, 1);
+  if jN < 0 then Exit;
+
+  result := self.DEPdepParam[jN].DEPparNum;
+end;
+
+function DEPreportJobAll.getNameEtapProc(index_tehEtapa: Integer): string;
+begin
+  case index_tehEtapa of
+    pc006_503_Rezhim_Mixed:         result := pc006_503_RzName_Mixed;
+    pc006_503_Rezhim_Zaboj_PZR_PZR: result := pc006_503_RzName_Zaboj_PZR_PZR;
+    pc006_503_Rezhim_Zaboj_SPO_SPO: result := pc006_503_RzName_Zaboj_SPO_SPO;
+    pc006_503_Rezhim_Zaboj_SPO_PRM: result := pc006_503_RzName_Zaboj_SPO_PRM;
+    pc006_503_Rezhim_Zaboj_SPO_PRB: result := pc006_503_RzName_Zaboj_SPO_PRB;
+    pc006_503_Rezhim_Zaboj_BUR_PRM: result := pc006_503_RzName_Zaboj_BUR_PRM;
+    pc006_503_Rezhim_Zaboj_BUR_PRB: result := pc006_503_RzName_Zaboj_BUR_PRB;
+    pc006_503_Rezhim_Zaboj_BUR_NRV: result := pc006_503_RzName_Zaboj_BUR_NRV;
+    pc006_503_Rezhim_Zaboj_BUR_BUR: result := pc006_503_RzName_Zaboj_BUR_BUR;
+    pc006_503_Rezhim_Pusto_PZR_PZR: result := pc006_503_RzName_Pusto_PZR_PZR;
+    pc006_503_Rezhim_Pusto_SPO_SPO: result := pc006_503_RzName_Pusto_SPO_SPO;
+    pc006_503_Rezhim_Pusto_BUR_NRV: result := pc006_503_RzName_Pusto_BUR_NRV;
+  else
+    result := format(pc006_503_002, [index_tehEtapa]);
+  end;
+end;
+
+procedure DEPreportJobAll.IniDEPsgtParam;
+var
+  rcd: rcdDEPsgtParam;
+begin
+  self.DEPsgtParam.Count := 0;
+  rcd.DEPparNum := -1;
+
+  rcd.SGTparNum := 1;
+  rcd.SGTparNameBig  := pc006_503_SGTpar3;
+  rcd.SGTparNameShrt := pc006_503_SGTpar3sh;
+  self.DEPsgtParam.Append(@rcd);
+end;
+
+function DEPreportJobAll.isSostTall(index_tehEtapa: Integer): boolean;
+begin
+  result :=
+             isSostTspo (index_tehEtapa)   OR
+             isSostTprom(index_tehEtapa)   OR
+             isSostTpror(index_tehEtapa)   OR
+             isSostTbur (index_tehEtapa)   OR
+             isSostTnar (index_tehEtapa)   OR
+             isSostTPzr (index_tehEtapa);
+end;
+
+function DEPreportJobAll.isSostTbur(index_tehEtapa: Integer): boolean;
+begin
+  case index_tehEtapa of
+pc006_503_Rezhim_Zaboj_BUR_BUR:
+                                 result := true;
+  else
+                                 result := false;
+  end;
+end;
+
+function DEPreportJobAll.isSostTnar(index_tehEtapa: Integer): boolean;
+begin
+  case index_tehEtapa of
+pc006_503_Rezhim_Zaboj_BUR_NRV,
+pc006_503_Rezhim_Pusto_BUR_NRV:
+                                 result := true;
+  else
+                                 result := false;
+  end;
+end;
+
+function DEPreportJobAll.isSostTprom(index_tehEtapa: Integer): boolean;
+begin
+  case index_tehEtapa of
+pc006_503_Rezhim_Zaboj_SPO_PRM,
+pc006_503_Rezhim_Zaboj_BUR_PRM:
+                                 result := true;
+  else
+                                 result := false;
+  end;
+end;
+
+function DEPreportJobAll.isSostTpror(index_tehEtapa: Integer): boolean;
+begin
+  case index_tehEtapa of
+pc006_503_Rezhim_Zaboj_SPO_PRB,
+pc006_503_Rezhim_Zaboj_BUR_PRB:
+                                 result := true;
+  else
+                                 result := false;
+  end;
+end;
+
+function DEPreportJobAll.isSostTpzr(index_tehEtapa: Integer): boolean;
+begin
+  case index_tehEtapa of
+pc006_503_Rezhim_Zaboj_PZR_PZR,
+pc006_503_Rezhim_Pusto_PZR_PZR:
+                                 result := true;
+  else
+                                 result := false;
+  end;
+end;
+
+function DEPreportJobAll.isSostTspo(index_tehEtapa: Integer): boolean;
+begin
+  case index_tehEtapa of
+pc006_503_Rezhim_Zaboj_SPO_SPO,
+pc006_503_Rezhim_Pusto_SPO_SPO:
+                                 result := true;
+  else
+                                 result := false;
+  end;
+end;
+
+function  DEPreportJobAll.loadGrafik(numPar: Integer; grf: TprqRptTX): Integer;
+var
+  j1, jLength, jC1: integer;
+  dVal, dTime: Double;
+begin
+// 9:53 21.05.2012
+// учесть, что три первых параметра - служебные
+  result := 1;
+  if numPar > self.DEPqueParam.valReport.listField.Count then Exit;
+
+  result := 0; j1 := 0; jLength := self.DEPqueParam.valReport.Count;
+  grf.yTime.Count := jLength;
+  grf.xVal.Count  := jLength;
+  for jC1 := 1 to jLength do
+  begin
+    dVal := self.DEPqueParam.valReport.getValField(jC1, numPar + 3);
+
+    if (System.Abs(dVal) >= cdbTOutVal1) and (System.Abs(dVal) <= cdbTOutVal2) then continue;
+    Inc(j1);
+    grf.xVal[j1]^  := dVal;
+    dTime := self.DEPqueParam.valReport.getValField(jC1, 2); // Время - второй параметр
+    grf.yTime[j1]^ := dTime;
+  end;
+
+  if j1 < jLength then
+  begin
+    grf.yTime.Count := j1;
+    grf.xVal.Count  := j1;
+  end;
+end;
+
+function DEPreportJobAll.dbdParamLoad: Integer;
+var
+  jC1:  Integer;
+begin
+  result := self.dbdParamLoad(self.XMLDocument1);
+
+  self.DEPdepParam.Count := self.TableList.Count;
+  for jC1 := 1 to self.TableList.Count do
+  begin
+    self.DEPdepParam[jC1].DEPparNum := self.TableList[jC1].numbParam;
+    self.DEPdepParam[jC1].SGTparNameBig := self.TableList[jC1].nameParam;
+    self.DEPdepParam[jC1].SGTparNameShrt := self.TableList[jC1].desc;
+    self.DEPdepParam[jC1].SGTparNameType := self.TableList[jC1].typeParam;
+    self.DEPdepParam[jC1].bSaveDB := self.TableList[jC1].bSaveDB;
+  end;
+
+end;
+
+function DEPreportJobAll.sgtParamLoad: Integer;
+var
+  Stream: TFileStream;
+  Root: IXMLNode;
+begin
+  self.sErr := '';
+
+  if Length(self.cnfSgtParamName) = 0 then
+  begin
+    result := -1; // Не указан файл конфигурации
+    Exit;
+  end;
+  if not FileExists(self.cnfSgtParamName) then
+  begin
+    result := -2; // Не найден файл конфигурации
+    Exit;
+  end;
+
+  Stream := TFileStream.Create(self.cnfSgtParamName, fmOpenRead);
+  try
+
+    XMLDocument1.LoadFromStream(Stream, xetUTF_8);
+
+    XMLDocument1.Active := True;
+    Root := XMLDocument1.DocumentElement;
+    result := sgtParamTranslator(Root);
+
+  finally
+    Stream.Free;
+  end;
+end;
+
+function DEPreportJobAll.sgtParamSave: Integer;
+var
+  fileTxt: TextFile;
+  wsXML: WideString;
+  jC1: Integer;
+begin
+  AssignFile(fileTxt, self.cnfSgtParamName);
+  try
+    try
+      Rewrite(fileTxt);
+
+  // Заголовок
+      wsXML  := pc006_503_xml1;             WriteLn(fileTxt, UTF8Encode(wsXML));
+      wsXML  := pc006_503_xml10;            WriteLn(fileTxt, UTF8Encode(wsXML));
+
+
+  // Цикл вывода записей
+      wsXML  := pc006_503_xml10_01;         WriteLn(fileTxt, UTF8Encode(wsXML));
+      for jC1 := 1 to self.DEPsgtParam.Count do
+      begin
+        wsXML  := format(pc006_503_xml10_01_01,
+                        [self.DEPsgtParam[jC1].SGTparNum,
+                         self.DEPsgtParam[jC1].DEPparNum,
+                         Trim(self.DEPsgtParam[jC1].SGTparNameBig),
+                         Trim(self.DEPsgtParam[jC1].SGTparNameShrt)]);
+                                            WriteLn(fileTxt, UTF8Encode(wsXML));
+      end;
+      wsXML  := pc006_503_xml10_02;         WriteLn(fileTxt, UTF8Encode(wsXML));
+{
+      wsXML  := format(pc006_503_xml10_01_12,
+                        [self.DEPqueParam.NullValue,
+                         self.DEPqueParam.NotValid,
+                         self.DEPqueParam.Delimeter,
+                         self.DEPqueParam.Precision,
+                         self.DEPqueParam.Digits,
+                         self.DEPqueParam.DataType]);
+                                            WriteLn(fileTxt, UTF8Encode(wsXML));
+}
+      wsXML  := pc006_503_xml10_01_20;
+                                            WriteLn(fileTxt, UTF8Encode(wsXML));
+      wsXML  := format(pc006_503_xml10_03, [self.DEPqueParam.RefrPath]);
+                                            WriteLn(fileTxt, UTF8Encode(wsXML));
+
+      wsXML  := format(pc006_503_xml10_04, [self.DEPqueParam.DataPath]);
+                                             WriteLn(fileTxt, UTF8Encode(wsXML));
+
+      wsXML  := format(pc006_503_xml10_05, [self.DEPqueParam.DocPath]);
+                                            WriteLn(fileTxt, UTF8Encode(wsXML));
+
+      wsXML  := pc006_503_xml10_01_19;
+                                            WriteLn(fileTxt, UTF8Encode(wsXML));
+
+  // Финал
+      wsXML  := pc006_503_xml11;            Write(fileTxt, UTF8Encode(wsXML));
+      result := 0;
+    except
+      on E: Exception do
+      begin
+        sErr   := E.Message;
+        result := 1;
+      end;
+    end;
+  finally
+    CloseFile(fileTxt);
+    self.DEPsgtParam.Modify := false;
+  end;
+end;
+
+function DEPreportJobAll.sgtParamTranslator(XmlNode: IXMLNode): Integer;
+var
+  jVer, jC1: Integer;
+  AttrNode: IXMLNode;
+begin
+  if XmlNode.NodeName = Null then
+  begin
+    result := pc006_503_XMLerr_002;
+    Exit;
+  end;
+
+  if XmlNode.NodeName = pc006_503_xml12 then
+  begin
+// Чтение версии транслятора
+    jVer   := 0;
+    result := pc006_503_XMLerr_001;
+    for jC1 := 1 to xmlNode.AttributeNodes.Count do
+    begin
+      AttrNode := xmlNode.AttributeNodes.Nodes[jC1 - 1];
+      if AttrNode.NodeName = Null then continue;
+      if AttrNode.NodeName <> pc006_503_xml13 then continue;
+
+      if AttrNode.Text = Null then
+      begin
+        sErr := pc006_503_cMSG_002;
+        Exit;
+      end;
+
+      if AttrNode.Text <> pc006_503_xml14 then
+      begin
+        sErr := Podmena('#ver', AttrNode.Text, pc006_503_cMSG_001);
+        Exit;
+      end;
+
+      jVer := 1;
+      break;
+    end;
+
+    if jVer = 1 then
+    begin
+      result := sgtParamTranslatVer1(XmlNode);
+    end
+    else
+    begin
+      sErr := pc006_503_cMSG_002;
+    end;
+  end
+  else
+  begin
+    result := pc006_503_XMLerr_002;
+  end;
+end;
+
+function DEPreportJobAll.sgtParamTranslatVer1(XmlNode: IXMLNode): Integer;
+var
+  jC1: Integer;
+  ChildNode: IXMLNode;
+begin
+  result := pc006_503_XMLerr_003;
+  for jC1 := 1 to xmlNode.ChildNodes.Count do
+  begin
+    ChildNode := xmlNode.ChildNodes.Nodes[jC1 - 1];
+    if ChildNode.NodeName = Null then continue;
+
+    if ChildNode.NodeName = pc006_503_xml10_01_02 then // '<Параметры_СГТ>';
+    begin
+      result := sgtParamTranslatVer1_1(ChildNode);
+    end;
+
+    if ChildNode.NodeName = pc006_503_xml10_01_11 then // '<Значения_По_Умолчанию>';
+    begin
+      result := sgtParamTranslatVer1_2(ChildNode);
+    end;
+  end;
+end;
+
+function DEPreportJobAll.sgtParamTranslatVer1_1(XmlNode: IXMLNode): Integer;
+var
+  jRcd, jCode, jC2, jC1: Integer;
+  ChildNode: IXMLNode;
+  AttrNode: IXMLNode;
+begin
+  for jC1 := 1 to xmlNode.ChildNodes.Count do
+  begin
+    ChildNode := xmlNode.ChildNodes.Nodes[jC1 - 1];
+    if ChildNode.NodeName = Null then continue;
+    if ChildNode.NodeName <> pc006_503_xml10_01_03 then continue; // 'Параметр';
+
+    jRcd := 0;
+    for jC2 := 1 to ChildNode.AttributeNodes.Count do
+    begin
+      AttrNode := ChildNode.AttributeNodes.Nodes[jC2 - 1];
+      if AttrNode.NodeName = Null then continue;
+
+      if AttrNode.NodeName = pc006_503_xml10_01_04 then // 'SGTparNum';
+      begin
+        if AttrNode.Text = Null then continue;
+        prqStrToInt(AttrNode.Text, jCode);
+        if jCode <= 0 then continue;
+        jRcd := AddDEPsgtParam(jCode);
+        self.DEPsgtParam[jRcd].SGTparNum := jCode;
+      end;
+
+      if AttrNode.NodeName = pc006_503_xml10_01_05 then // 'DEPparNum';
+      begin
+        if jRcd = 0 then continue;
+        if AttrNode.Text = Null then continue;
+        prqStrToInt(AttrNode.Text, jCode);
+        self.DEPsgtParam[jRcd].DEPparNum := jCode;
+      end;
+
+      if AttrNode.NodeName = pc006_503_xml10_01_06 then // 'SGTparNameBig';
+      begin
+        if jRcd = 0 then continue;
+        if AttrNode.Text = Null then continue;
+        self.DEPsgtParam[jRcd].SGTparNameBig := Trim(AttrNode.Text);
+      end;
+
+      if AttrNode.NodeName = pc006_503_xml10_01_07 then // 'SGTparNameShrt';
+      begin
+        if jRcd = 0 then continue;
+        if AttrNode.Text = Null then continue;
+        self.DEPsgtParam[jRcd].SGTparNameShrt := Trim(AttrNode.Text);
+      end;
+    end;
+  end;
+
+  if self.DEPsgtParam.Count = 0 then
+  begin
+    result := pc006_503_XMLerr_003;
+  end
+  else
+  begin
+    self.DEPsgtParam.Sort(1);
+    result := 0;
+  end;
+end;
+
+function DEPreportJobAll.sgtParamTranslatVer1_2(XmlNode: IXMLNode): Integer;
+var
+  jC1: Integer;
+//  AttrNode: IXMLNode;
+  ChildNode: IXMLNode;
+begin
+  result := 0;
+{
+  for jC1 := 1 to XmlNode.AttributeNodes.Count do
+  begin
+    AttrNode := XmlNode.AttributeNodes.Nodes[jC1 - 1];
+    if AttrNode.NodeName = Null then continue;
+
+    if AttrNode.NodeName = pc006_503_xml10_01_13 then // 'NullValue';
+    begin
+      if AttrNode.Text = Null then continue;
+      self.DEPqueParam.NullValue := AttrNode.Text;
+      continue;
+    end;
+
+    if AttrNode.NodeName = pc006_503_xml10_01_14 then // 'NotValid';
+    begin
+      if AttrNode.Text = Null then continue;
+      self.DEPqueParam.NotValid := AttrNode.Text;
+      continue;
+    end;
+
+    if AttrNode.NodeName = pc006_503_xml10_01_15 then // 'Delimeter';
+    begin
+      if AttrNode.Text = Null then continue;
+      self.DEPqueParam.Delimeter := AttrNode.Text;
+      continue;
+    end;
+
+    if AttrNode.NodeName = pc006_503_xml10_01_16 then // 'Precision';
+    begin
+      if AttrNode.Text = Null then continue;
+      if prqStrToInt(AttrNode.Text, jCode) then self.DEPqueParam.Precision := jCode;
+      continue;
+    end;
+
+    if AttrNode.NodeName = pc006_503_xml10_01_17 then // 'Digits';
+    begin
+      if AttrNode.Text = Null then continue;
+      if prqStrToInt(AttrNode.Text, jCode) then self.DEPqueParam.Digits := jCode;
+      continue;
+    end;
+
+    if AttrNode.NodeName = pc006_503_xml10_01_18 then // 'DataType';
+    begin
+      if AttrNode.Text = Null then continue;
+      if prqStrToInt(AttrNode.Text, jCode) then self.DEPqueParam.DataType := jCode;
+      continue;
+    end;
+  end;
+}
+
+  for jC1 := 1 to xmlNode.ChildNodes.Count do
+  begin
+    ChildNode := xmlNode.ChildNodes.Nodes[jC1 - 1];
+    if ChildNode.NodeName = Null then continue;
+    if ChildNode.NodeName = pc006_503_xml10_03_01 then // ПутьКописаниям
+    begin
+      self.DEPqueParam.RefrPath := Trim(ChildNode.Text);
+      continue;
+    end;
+
+    if ChildNode.NodeName = pc006_503_xml10_04_01 then // ПутьКданным
+    begin
+      self.DEPqueParam.DataPath := Trim(ChildNode.Text);
+      continue;
+    end;
+
+    if ChildNode.NodeName = pc006_503_xml10_05_01 then // ПутьКдокументам
+    begin
+      self.DEPqueParam.DocPath := Trim(ChildNode.Text);
+      continue;
+    end;
+  end;
+end;
+
+{ TDEPrptALL }
+
+procedure TDEPrptALL.Clone(Source: TDEPrptALL);
+begin
+  if not Assigned(Source) then Exit;
+
+  self.FModify   := Source.FModify;
+  self.dBeg      := Source.dBeg;
+  self.dEnd      := Source.dEnd;
+  self.NotValid  := Source.NotValid;
+  self.Delimeter := Source.Delimeter;
+  self.NULLValue := Source.NULLValue;
+  self.Precision := Source.Precision;
+  self.Digits    := Source.Digits;
+  self.DataType  := Source.DataType;
+  self.DataPath  := Source.DataPath;
+  self.RefrPath  := Source.RefrPath;
+  self.DocPath   := Source.DocPath;
+  self.dStart    := Source.dStart;
+  self.Zakaz     := Source.Zakaz;
+  self.Podrjad   := Source.Podrjad;
+  self.Station   := Source.Station;
+  Mestorogd      := Source.Mestorogd;
+  Kust           := Source.Kust;
+  Rabota         := Source.Rabota;
+  Skvagina       := Source.Skvagina;
+  MainPersons    := Source.MainPersons;
+
+  listReport.Clone(Source.listReport);
+  valReport.Clone(Source.valReport);
+end;
+
+constructor TDEPrptALL.Create;
+begin
+  dBeg         := 0;
+  dEnd         := 0;
+  NotValid     := 'NotValid';
+  Delimeter    := '; ';
+  NULLValue    := '99999.999';
+  Precision    := 3;
+  Digits       := 10;
+  DataType     := 1;
+  DataPath     := 'C:\Contour2D\Database\Online\Store\';
+  RefrPath     := 'C:\Contour2D\Reference\CDT200\';
+  DocPath      := 'C:\Contour2D\';
+  self.dStart    := Now;
+  self.Zakaz     := '';
+  self.Podrjad   := '';
+  self.Station   := '';
+  Mestorogd      := '';
+  Kust           := '';
+  Rabota         := '';
+  Skvagina       := '';
+  MainPersons    := '';
+  
+  valReport    := prqTabsField.Create;
+  listReport   := prqTinteger.Create;
+end;
+
+destructor TDEPrptALL.Destroy;
+begin
+  listReport.Free;
+  valReport.Free;
+  inherited;
+end;
+
+procedure TDEPrptALL.SetModify(const Value: boolean);
+begin
+  FModify := Value;
+end;
+
+end.

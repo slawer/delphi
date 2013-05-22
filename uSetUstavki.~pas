@@ -1,0 +1,840 @@
+unit uSetUstavki;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  ExtCtrls, StdCtrls, Buttons, ScktComp,
+  Dialogs, upf2, uAbstrArray, uMainData, uMainConst,
+  uSetUstavkiConst, uShowProc1,
+  uOreolNWTune1, uOreolBegTuneBtn2, uSetUstavkiTune, uSetUstavkiData,
+  uOreolProtocol, uDNSprotocol, ActnList, Menus, IniFiles,
+  uAbstrButtonPanel, uMsgDial, uInputPassword, jpeg;
+
+type
+  TcSetUstavki = class(Tpf2)
+    Panel1: TPanel;
+    ClientSocket1: TClientSocket;
+    Timer1: TTimer;
+    OpenDialog1: TOpenDialog;
+    ActionList1: TActionList;
+    MainMenu1: TMainMenu;
+    Action1: TAction;
+    Action2: TAction;
+    Action3: TAction;
+    Action4: TAction;
+    Action5: TAction;
+    Action6: TAction;
+    N1: TMenuItem;
+    N2: TMenuItem;
+    N3: TMenuItem;
+    N4: TMenuItem;
+    N5: TMenuItem;
+    N6: TMenuItem;
+    N7: TMenuItem;
+    N8: TMenuItem;
+    Action7: TAction;
+    N9: TMenuItem;
+    N10: TMenuItem;
+    Action8: TAction;
+    Timer2: TTimer;
+    Panel2: TPanel;
+    Panel3: TPanel;
+    Label1: TLabel;
+    Panel4: TPanel;
+    Panel5: TPanel;
+    Panel6: TPanel;
+    Action9: TAction;
+    Timer3: TTimer;
+    Image1: TImage;
+    BitBtn1: TBitBtn;
+    procedure FormCreate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure ClientSocket1Connect(Sender: TObject;
+      Socket: TCustomWinSocket);
+    procedure ClientSocket1Error(Sender: TObject; Socket: TCustomWinSocket;
+      ErrorEvent: TErrorEvent; var ErrorCode: Integer);
+    procedure ClientSocket1Read(Sender: TObject; Socket: TCustomWinSocket);
+    procedure Timer1Timer(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure Action1Execute(Sender: TObject);
+    procedure Action2Execute(Sender: TObject);
+    procedure Action3Execute(Sender: TObject);
+    procedure Action4Execute(Sender: TObject);
+    procedure Action5Execute(Sender: TObject);
+    procedure Action6Execute(Sender: TObject);
+    procedure Action7Execute(Sender: TObject);
+    procedure Panel1Resize(Sender: TObject);
+    procedure Action8Execute(Sender: TObject);
+    procedure Timer2Timer(Sender: TObject);
+    procedure Action9Execute(Sender: TObject);
+    procedure Timer3Timer(Sender: TObject);
+    procedure FormKeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure BitBtn1Click(Sender: TObject);
+  private
+    { Private declarations }
+    pNW: TOreolNWTune1;
+    pBT: TOreolBegTuneBtn2;
+    bAuto, bNotQ: Boolean;
+    bModify: Boolean;
+    bFirst: Boolean;
+    sConfFile: string;
+    ParamCurent: TSetUstavkiData1;
+    jMode: Integer;
+    ParamCurentiD, jNumber: Integer;
+    sKeyCmd: String;
+    listButton1: prqTobject; // Коллекция панелей
+    listButton2: prqTobject; // Коллекция панелей
+    cmdRing: TCmdBuff;
+    uShow: Tpf2ShowProc1;
+
+    procedure PanelResize(bCr: Boolean);
+    procedure PanelResize1(bCr: Boolean; pan: TPanel; cmp: prqTobject);
+    procedure signButton;
+    procedure iniParam(iniFile: TMemIniFile; Number: Integer);
+    procedure setParam(iniFile: TMemIniFile; Number: Integer);
+    procedure SendStr(s1: String);
+    procedure SetUstavka(nButton: Integer);
+    procedure ClosePrcShow;
+  public
+    { Public declarations }
+    procedure unknowDialogMessage(var Msg: TMessage; kode: Integer); override;
+  end;
+
+var
+  cSetUstavki: TcSetUstavki;
+
+implementation
+uses uSupport;
+
+{$R *.dfm}
+
+procedure TcSetUstavki.FormCreate(Sender: TObject);
+begin
+  DecimalSeparator := '.';
+  bFirst := True;
+  jMode  := 0;
+  ParamCurentiD := 0;
+
+  Application.Title := pc006_02_ProjectName;
+  Caption := pc006_02_Caption;
+
+  listButton1 := prqTobject.Create;
+  listButton2 := prqTobject.Create;
+  ParamCurent := TSetUstavkiData1.Create;
+  ParamCurent.Count := 16;
+  ParamCurent.initSelf;
+
+  taskParam := TtaskParam.Create;
+  taskParam.ProjectName := pc006_02_ProjectName;
+  taskParam.MainGUID    := pc006_02_MainGUID;
+  taskParam.mainPath    := pc006_02_SoftPath;
+  taskParam.regTask;
+
+  inherited;
+
+// Зарегистрировать форму Create and register object
+  jUniType := tobjMain;
+  jUniKeyBoss := 0;
+  registryObj(taskParam, jUniKeySelf, jUniKeyBoss, jUniType, self);
+  taskParam.mainKey := jUniKeySelf;
+
+// Восстановить параметры Restore parameters
+  bTag  := False;
+  bGeom := True;
+  getParam;
+
+  cmdRing := TCmdBuff.Create;
+  cmdRing.Count := 100000;
+
+// Создать диалог Начальная Настройка
+  pBT := TOreolBegTuneBtn2.Create(self);
+  pBT.bMustSave := True;
+  pBT.bNoUnReg := True;
+  pBT.taskParam := taskParam;
+//  registryObj(taskParam, pBT.jUniKeySelf, jUniKeySelf, pBT.jUniType, pBT);
+  pBT.bTag  := True;
+  pBT.bGeom := True;
+  pBT.OpenDialog1 := OpenDialog1;
+  pBT.getParam;
+
+// Создать диалог Настройка Сети
+  pNW := TOreolNWTune1.Create(self);
+  pNW.bMustSave := True;
+  pNW.bNoUnReg := True;
+  pNW.taskParam := taskParam;
+//  registryObj(taskParam, pNW.jUniKeySelf, jUniKeySelf, pNW.jUniType, pNW);
+  pNW.bTag  := False;
+  pNW.bGeom := True;
+  pNW.getParam;
+
+  pBT.getParamNW(bAuto, bNotQ, sConfFile);
+  Action5Execute(self); // Настроить конфигурацию
+
+  if bAuto then Action4Execute(self);
+
+//  Panel1Resize(Self);
+
+  uShow := nil;
+
+  Timer1.Enabled := True;
+  Application.ProcessMessages;
+end;
+
+procedure TcSetUstavki.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  try
+    Action6Execute(self);
+    ClientSocket1.Free;
+    if isCanCloseChilObj(taskParam, jUniKeySelf, True) then
+      UnregChildTreeObj(taskParam, jUniKeySelf, jUniKeySelf);
+  except end;
+
+  ClosePrcShow;
+
+  inherited;
+
+  cmdRing.Free;
+  taskParam.Free;
+  pNW.Free;
+  pBT.Free;
+  ParamCurent.Free;
+  listButton1.Free;
+  listButton2.Free;
+end;
+
+procedure TcSetUstavki.ClientSocket1Connect(Sender: TObject;
+  Socket: TCustomWinSocket);
+//var
+  //s1: String;
+begin
+  inherited;
+//  s1 := pc004_01_Connect1 + pc004_01_Fin;
+  //SendStr(s1);
+end;
+
+procedure TcSetUstavki.ClientSocket1Error(Sender: TObject;
+  Socket: TCustomWinSocket; ErrorEvent: TErrorEvent;
+  var ErrorCode: Integer);
+begin
+  ErrorCode := 0;
+  ErrorCode := 0;
+  try
+    self.ClientSocket1.Active := false;
+  except
+  end;
+
+{
+  inherited;
+eeGeneral	The socket received an error message that does not fit into any of the following categories.
+eeSend	An error occurred when trying to write to the socket connection.
+eeReceive	An error occurred when trying to read from the socket connection.
+eeConnect	A connection request that was already accepted could not be completed.
+eeDisconnect	An error occurred when trying to close a connection.
+eeAccept	A problem occurred when trying to accept a client connection request.
+
+  case ErrorEvent of
+eeGeneral:
+begin
+  Memo1.Lines.Add('The socket received an uncknown error message');
+end;
+eeSend:
+begin
+  Memo1.Lines.Add('An error occurred when trying to write to the socket connection');
+end;
+eeReceive:
+begin
+  Memo1.Lines.Add('An error occurred when trying to read from the socket connection');
+end;
+eeConnect:
+begin
+  Memo1.Lines.Add('A connection request that was already accepted could not be completed');
+  BitBtn3.Caption := pc003_07_02;
+end;
+eeDisconnect:
+begin
+  Memo1.Lines.Add('An error occurred when trying to close a connection');
+  BitBtn3.Caption := pc003_07_04;
+end;
+eeAccept:
+begin
+  Memo1.Lines.Add('A problem occurred when trying to accept a client connection request');
+end;
+  end;
+}
+end;
+
+procedure TcSetUstavki.ClientSocket1Read(Sender: TObject;
+  Socket: TCustomWinSocket);
+var
+  FpntArr: prqPByteArray;
+  sBuf: array[1..30000] of Byte;
+  sCmd: String;
+  s1: String;
+  jObr, jUst, jAddr, lRes, lBuf: Integer;
+begin
+  inherited;
+// Ввод переданного пакета
+
+  FpntArr := prqPByteArray(@sBuf[1]);
+  lBuf := TOreolProtocol.getBuffSocket(Socket, FpntArr, SizeOf(sBuf));
+
+  if bFirst then
+  begin
+    s1 := pc004_01_Connect1 + pc004_01_Fin;
+    SendStr(s1);
+    bFirst := False;
+//    ShowMessage(s1);
+    Exit;
+  end;
+
+  if ParamCurentiD = 0 then Exit;
+  cmdRing.addArray(FpntArr, lBuf, lRes);
+  while cmdRing.getArrSize > 0 do
+  begin
+    cmdRing.getCommand(sCmd);
+// анализ команды и результата запроса
+    if not TDNSprotocol.isCMDread(sCmd) then continue;
+    jAddr := TDNSprotocol.getCMDAddr(sCmd);
+    if jAddr <> ParamCurent[ParamCurentiD].BKSDNumb then continue;
+    s1 := Copy(sCmd, 5, 8);
+    if s1 <> sKeyCmd then continue;
+    Timer3.Enabled := False;
+    ClosePrcShow;
+    jObr := ParamCurent[ParamCurentiD].Ustavka * ParamCurent[ParamCurentiD].Delitel;
+    jUst := TDNSprotocol.getCMDparam(sCmd, 0, ParamCurent[ParamCurentiD].l_B);
+    if jUst = jObr then
+      ShowMessage(pc006_02_28)
+    else
+      ShowMessage(pc006_02_29 + #13#10 +
+                  sCmd + #13#10 +
+                  IntToStr(jUst));
+    ParamCurentiD := 0;
+  end;
+end;
+
+procedure TcSetUstavki.Timer1Timer(Sender: TObject);
+begin
+  if ClientSocket1.Active then
+  begin
+    Label1.Font.Color  := clGreen;
+    Label1.Caption      := pc006_02_01;
+  end
+  else
+  begin
+    Label1.Font.Color  := clRed;
+    Label1.Caption      := pc006_02_02;
+  end;
+end;
+
+procedure TcSetUstavki.FormCloseQuery(Sender: TObject;
+  var CanClose: Boolean);
+begin
+  if bNotQ then Exit;
+  if MessageDlg(pc006_02_21, mtWarning, [mbYes, mbNo], 0) <> mrYes then
+  begin
+    CanClose := False;
+  end;
+end;
+
+procedure TcSetUstavki.Action1Execute(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TcSetUstavki.Action3Execute(Sender: TObject);
+begin
+  pNW.bFirst := True;
+  pNW.ShowModal;
+end;
+
+procedure TcSetUstavki.Action2Execute(Sender: TObject);
+begin
+// Начальная настройка
+  pBT.bFirst := True;
+  pBT.ShowModal;
+  if pBT.bSaveParam then
+  begin
+    if pBT.getParamNW(bAuto, bNotQ, sConfFile) then
+    begin // Настроить конфигурацию
+      Action5Execute(self);
+    end;
+  end;
+end;
+
+procedure TcSetUstavki.Action4Execute(Sender: TObject);
+var
+  sAddr: String;
+  jPort: Integer;
+begin
+  if ClientSocket1.Active then
+  begin // Разорвать существующее соединение
+    ClientSocket1.Active := False;
+  end;
+
+// Проверка Сети
+  if not pNW.getParamNW(sAddr, jPort) then
+  begin
+    ShowMessage(pc006_02_11);
+    Exit;
+  end;
+  ClientSocket1.Host := sAddr;
+  ClientSocket1.Port    := jPort;
+
+  ClientSocket1.Active := True;
+  bFirst := True;
+  jMode  := 1;
+  Timer2.Enabled := True;
+end;
+
+procedure TcSetUstavki.Action5Execute(Sender: TObject);
+var
+  iniFile: TMemIniFile;
+begin
+// Настройка конфигурации
+  if Length(sConfFile) = 0 then
+  begin
+    ShowMessage(pc006_02_12);
+    Exit;
+  end;
+
+  iniFile := TMemIniFile.Create(sConfFile);
+  try
+
+    iniParam(iniFile, 1);
+
+  finally
+    iniFile.Free;
+  end;
+end;
+
+procedure TcSetUstavki.Action6Execute(Sender: TObject);
+begin
+// Остановить опрос
+  Timer2.Enabled := False;
+  jMode  := 0;
+  if ClientSocket1.Active then
+  begin
+    SendStr(chr(4)+chr(0));
+    Sleep(200);
+  end;
+
+  ClientSocket1.Active := False;
+end;
+
+procedure TcSetUstavki.iniParam(iniFile: TMemIniFile; Number: Integer);
+begin
+  ParamCurent.SetStrings(iniFile, Number);
+  signButton;
+end;
+
+procedure TcSetUstavki.Action7Execute(Sender: TObject);
+var
+  pBtnT: TOreolSetBlockTune;
+begin
+// Создать диалог Настройка Сети
+  pBtnT := TOreolSetBlockTune.Create(self);
+  try
+    pBtnT.taskParam := nil;
+    pBtnT.bNotSaveParam := True;
+    pBtnT.bMustSave := True;
+
+    pBtnT.Param := ParamCurent;
+
+      pBtnT.ShowModal;
+
+    bModify := pBtnT.bExit;
+  finally
+    pBtnT.Free;
+  end;
+
+
+// Настройка конфигурации
+
+  if bModify then
+  begin
+    signButton;
+
+    if Length(sConfFile) = 0 then
+    begin
+      pBT.bFirst := True;
+      pBT.ShowModal;
+      if pBT.bSaveParam then
+      begin
+        if not pBT.getParamNW(bAuto, bNotQ, sConfFile) then Exit;
+      end;
+    end;
+
+    Action9Execute(Self);
+{    iniFile := TMemIniFile.Create(sConfFile);
+    try
+
+      setParam(iniFile, 1);
+
+      iniFile.UpdateFile;
+    finally
+      iniFile.Free;
+    end;
+}
+  end;
+end;
+
+procedure TcSetUstavki.setParam(iniFile: TMemIniFile;
+  Number: Integer);
+begin
+  ParamCurent.GetStrings(iniFile, Number);
+end;
+
+procedure TcSetUstavki.Panel1Resize(Sender: TObject);
+begin
+  inherited;
+  PanelResize(False);
+end;
+
+procedure TcSetUstavki.Action8Execute(Sender: TObject);
+var
+  s3, s2, s1: String;
+  jC2, jSi, jC1: Integer;
+  Buff: array of Integer;
+begin
+  inherited;
+
+  if not bNotQ then
+  begin
+    if MessageDlg(pc006_02_22, mtWarning, [mbYes, mbNo], 0) <> mrYes then Exit;
+  end;
+
+  if not ClientSocket1.Active then
+  begin
+    ShowMessage(pc006_02_13);
+    Exit;
+  end;
+
+  if Timer3.Enabled then
+  begin
+    ShowMessage(pc006_02_27);
+    Exit;
+  end;
+
+  for jC1 := 1 to ParamCurent.Count do
+  begin
+    if ParamCurent[jC1].iD <> jNumber then continue;
+
+// Сформировать команду "Запрет цикла опроса"
+    s3 := pc004_01_ZGLJob1 + IntToHex(ParamCurent[jC1].BKSDNumb, 2) + pc004_01_CmdMergeStop + pc004_01_Fin;
+
+// Сформировать команду "Рестарт"
+    s2 := pc004_01_ZGLJob1 + IntToHex(ParamCurent[jC1].BKSDNumb, 2) + pc004_01_CmdRestart + pc004_01_Fin;
+
+// Сформировать команду "Запись уставки"
+    if ParamCurent[jC1].Delitel = 0 then ParamCurent[jC1].Delitel := 1;
+    jSi := ParamCurent[jC1].Delitel * ParamCurent[jC1].Ustavka;
+    if (ParamCurent[jC1].l_B < 1) or (ParamCurent[jC1].l_B > 4) then
+    begin
+      ParamCurent[jC1].l_B := 2;
+    end;
+
+    setLength(Buff, ParamCurent[jC1].l_B);
+    try
+
+      for jC2 := 1 to ParamCurent[jC1].l_B do
+      begin
+        Buff[ParamCurent[jC1].l_B - jC2] := jSi and $FF;
+        jSi := jSi shr 8;
+      end;
+
+      s1 := TDNSprotocol.getCMDwriteEprom(
+        ParamCurent[jC1].BKSDNumb,
+        ParamCurent[jC1].Comanda,
+        ParamCurent[jC1].Registr,
+        Buff,
+        True);
+      sKeyCmd := Copy(s1, 12, 8);
+
+      SendStr(s3);
+      Sleep(200);
+      SendStr(s1);
+      Sleep(200);
+      SendStr(s2);
+      Timer3.Enabled := True;
+      ParamCurentiD := jC1;
+
+      uShow := uSupport.ShowProcess1(true, ParamCurent[jC1].BKSDName, self);
+
+    finally
+      setLength(Buff, 0)
+    end;
+  end;
+end;
+
+procedure TcSetUstavki.SendStr(s1: String);
+var
+  bArr: prqPByteArray;
+begin
+  bArr := prqPByteArray(@s1[1]);
+  TOreolProtocol.fSendBuf(ClientSocket1.Socket, bArr, Length(s1));
+end;
+
+procedure TcSetUstavki.Timer2Timer(Sender: TObject);
+begin
+  inherited;
+  if jMode = 1 then
+  begin
+    if not ClientSocket1.Active then
+    begin
+      Timer2.Enabled := False;
+      Action4Execute(self);
+    end;
+  end;
+end;
+
+procedure TcSetUstavki.signButton;
+procedure setPanelParam(rcd: rcdTcontainer; jC1,jS: Integer; sCap: String);
+var
+  pP: TPanel; pA: prqTButtonPanel; pB: TBitBtn;
+begin
+  pA := rcd.ukz as prqTButtonPanel;
+  pP := pA.Panel;
+  pP.BevelInner := bvNone;
+  pP.BevelOuter := bvRaised;
+  pP.BevelWidth := Panel2.BevelWidth;
+  pB := pA.BitBtn;
+  pB.Font.Color := clMaroon;
+  pB.Font.Size  := jS; //12;
+  pB.Font.Style := [fsBold];
+  pB.Caption    := sCap;
+end;
+
+var
+  jC1: Integer;
+  rcd: rcdTcontainer;
+begin
+  listButton1.Count := 0;
+  listButton2.Count := 0;
+  for jC1 := 1 to ParamCurent.Count do
+  begin
+    if ParamCurent[jC1].BKSDNumb > 0 then
+    begin
+      rcd.key := ParamCurent[jC1].iD;
+      rcd.ukz := prqTButtonPanel.Create(Handle, rcd.key);
+      setPanelParam(rcd, jC1, 12, ParamCurent[jC1].BKSDName);
+      listButton1.Append(@rcd);
+
+      rcd.key := ParamCurent[jC1].iD + 1000;
+      rcd.ukz := prqTButtonPanel.Create(Handle, rcd.key);
+      setPanelParam(rcd, jC1, 16, IntToStr(ParamCurent[jC1].Ustavka));
+      listButton2.Append(@rcd);
+    end;
+  end;
+  listButton1.Sort(1);
+  listButton2.Sort(1);
+  PanelResize(True);
+end;
+
+procedure TcSetUstavki.PanelResize(bCr: Boolean);
+begin
+  inherited;
+  PanelResize1(bCr, Panel5, listButton1);
+  PanelResize1(bCr, Panel4, listButton2);
+end;
+
+procedure TcSetUstavki.unknowDialogMessage(var Msg: TMessage;
+  kode: Integer);
+begin
+  if kode = WM_User_Dialog then
+  begin
+    case Msg.WParamLo of
+      101:
+      begin
+        jNumber := Msg.LParam;
+        if jNumber < 1000 then
+        begin
+          Action8Execute(self);
+        end
+        else
+        begin
+          SetUstavka(jNumber);
+          Action8Execute(self);
+        end;
+      end;
+      else inherited;
+    end;
+    Exit;
+  end;
+  inherited;
+  Application.ProcessMessages;
+end;
+
+procedure TcSetUstavki.PanelResize1(bCr: Boolean; pan: TPanel; cmp: prqTobject);
+var
+  j0, jL, jC1, j1: Integer;
+  pA: prqTButtonPanel; pP: TPanel;
+begin
+  jL := cmp.Count; if jL = 0 then Exit;
+  j1 := pan.ClientHeight div jL;
+
+  j0 := 0;
+  for jC1 := 1 to jL do
+  begin
+    if jC1 = jL then
+    begin
+      j1 := pan.ClientHeight - j0;
+    end;
+    pA := cmp[jC1].ukz as prqTButtonPanel;
+
+    if bCr then
+    begin
+      pP := (cmp[jC1].ukz as prqTButtonPanel).Panel;
+      pP.Parent := pan;
+      (cmp[jC1].ukz as prqTButtonPanel).BitBtn.Parent := pP;
+    end;
+
+    pA.setSizePanel(j0,0, pan.ClientWidth, j1, alNone);
+    pA.allocButton(pc006_02_Top0, pc006_02_Lft0, pc006_02_Top0, pc006_02_Lft0);
+    Inc(j0, j1);
+  end;
+end;
+
+procedure TcSetUstavki.SetUstavka(nButton: Integer);
+var
+  s2, s1: String;
+  jBtn2, jUst, jC1: Integer;
+  bFind: Boolean;
+  rcd: rcdTcontainer;
+begin
+  bFind := False;
+  for jC1 := 1 to ParamCurent.Count do
+  begin
+    if ParamCurent[jC1].iD <> (nButton - 1000) then continue;
+    bFind := True;
+    Break;
+  end;
+  if not bFind then
+  begin
+    ShowMessage(pc006_02_23);
+    Exit;
+  end;
+
+  if ParamCurent[jC1].RO <> 0 then
+  begin
+    ShowMessage(pc006_02_30);
+    Exit;
+  end;
+
+  s2 := IntToStr(ParamCurent[jC1].Ustavka);
+  s1 := inputBox(pc006_02_ProjectName, ParamCurent[jC1].BKSDName, s2);
+  if s1 = s2 then Exit;
+
+  try
+    jUst := StrToInt(s1);
+  except
+    ShowMessage(format(pc006_02_24, [s1]));
+    Exit;
+  end;
+
+  if jUst < 0 then
+  begin
+    ShowMessage(format(pc006_02_25, [s1]));
+    Exit;
+  end;
+
+  ParamCurent[jC1].Ustavka := jUst;
+
+  rcd.key := nButton;
+  jBtn2 := listButton2.Find(@rcd, 1);
+  if jBtn2 = 0 then
+  begin
+    ShowMessage(pc006_02_23);
+    Exit;
+  end;
+
+  (listButton2[jBtn2].ukz as prqTButtonPanel).BitBtn.Caption := IntToStr(jUst);
+  Action9Execute(Self);
+end;
+
+procedure TcSetUstavki.Action9Execute(Sender: TObject);
+var
+  iniFile: TMemIniFile;
+begin
+// Настройка конфигурации
+  if Length(sConfFile) = 0 then
+  begin
+    ShowMessage(pc006_02_12);
+    Exit;
+  end;
+
+  iniFile := TMemIniFile.Create(sConfFile);
+  try
+    setParam(iniFile, 1);
+    iniFile.UpdateFile;
+  finally
+    iniFile.Free;
+  end;
+end;
+
+procedure TcSetUstavki.Timer3Timer(Sender: TObject);
+begin
+  Timer3.Enabled := False;
+  ParamCurentiD := 0;
+  ClosePrcShow;
+  ShowMessage(pc006_02_26);
+end;
+
+procedure TcSetUstavki.FormKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+var
+  pSW: TcInputPassword;
+begin
+  inherited;
+  if Shift = [ssCtrl] then
+  begin
+    if Key = 71 then // Ctrl G
+    begin
+      pSW := TcInputPassword.Create(self);
+      try
+        pSW.ShowModal;
+        if pSW.Edit1.Text = pc006_02_PathWord0 then
+        begin
+          self.N4.Enabled := true;
+          self.N5.Enabled := true;
+          self.N9.Enabled := true;
+        end
+        else
+        begin
+          if Length(Trim(pSW.Edit1.Text)) > 0 then
+          begin
+            ShowMessage(pc006_02_15);
+          end;
+          self.N4.Enabled := false;
+          self.N5.Enabled := false;
+          self.N9.Enabled := false;
+        end;
+      finally
+        pSW.Free;
+      end;
+    end;
+  end;
+end;
+
+procedure TcSetUstavki.BitBtn1Click(Sender: TObject);
+begin
+  inherited;
+  self.Close;
+end;
+
+procedure TcSetUstavki.ClosePrcShow;
+begin
+  try
+    if Assigned(uShow) then
+    begin
+       uShow.Close;
+       uShow.Free;
+    end;
+  except
+  end;
+  uShow := nil;
+end;
+
+end.

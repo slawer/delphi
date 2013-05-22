@@ -1,0 +1,90 @@
+unit uSetUstavkiTune;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs,
+  upf2, uMainData, uMainConst, uSetUstavkiTuneConst, StdCtrls, Buttons,
+  uSetUstavkiData, ExtCtrls, Grids;
+
+type
+  TOreolSetBlockTune = class(Tpf2)
+    Panel1: TPanel;
+    Panel2: TPanel;
+    BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
+    StringGrid1: TStringGrid;
+    Memo1: TMemo;
+    procedure FormCreate(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+  private
+    { Private declarations }
+    fbFirst: Boolean;
+
+    ParamNew: TSetUstavkiData1;
+    procedure ParamInit;
+
+  public
+    { Public declarations }
+    Param: TSetUstavkiData1;
+    bExit: Boolean;
+  end;
+
+implementation
+
+{$R *.dfm}
+
+procedure TOreolSetBlockTune.FormCreate(Sender: TObject);
+begin
+  jUniType := pc006_106_jMain;
+  Caption  := pc006_106_Caption;
+  bNotSaveParam := True;
+  fbFirst  := True;
+  bExit    := False;
+  ParamNew := TSetUstavkiData1.Create;
+end;
+
+procedure TOreolSetBlockTune.FormActivate(Sender: TObject);
+begin
+  if fbFirst then
+  begin
+    ParamInit;
+    fbFirst := False;
+  end;
+end;
+
+procedure TOreolSetBlockTune.BitBtn1Click(Sender: TObject);
+begin
+  if not ParamNew.tranStringGrid(StringGrid1) then Exit;
+
+  Param.Count := 0;
+  Param.AppendClass(ParamNew);
+  bExit  := True;
+  Close;
+end;
+
+procedure TOreolSetBlockTune.BitBtn2Click(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TOreolSetBlockTune.ParamInit;
+begin
+  ParamNew.Count := 0;
+  ParamNew.AppendClass(Param);
+  ParamNew.signStringGrid(StringGrid1);
+  ParamNew.fillStringGrid(StringGrid1);
+end;
+
+procedure TOreolSetBlockTune.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  ParamNew.Free;
+  inherited;
+end;
+
+end.
